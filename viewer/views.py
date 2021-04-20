@@ -1,5 +1,6 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.views import View
+from django.views.generic import TemplateView, ListView
 from .models import Movie
 
 # Create your views here.
@@ -16,10 +17,21 @@ def hello_with_parameter(request, s):
         context={"adjectives": [s, s1, "Wonderful", "Man's"]}
     )
 
-def movies(request):
-    my_movies = Movie.objects.all()
-    return render(
-        request,
-        template_name="viewer/movies.html",
-        context={"movies": my_movies}
-    )
+
+class GenericMoviesView(View):
+    def get(self, request):
+        return render(
+            request,
+            template_name="viewer/movies.html",
+            context={"movies": Movie.objects.all()}
+        )
+
+
+class TemplateMoviesView(TemplateView):
+    template_name = "viewer/movies.html"
+    extra_context = {"movies": Movie.objects.all()}
+
+
+class MoviesView(ListView):
+    template_name = "viewer/movies.html"
+    model = Movie

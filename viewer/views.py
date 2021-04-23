@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import TemplateView, ListView, FormView
+from django.contrib import messages
 from .models import Movie
 from .forms import MovieForm
 from logging import getLogger
@@ -29,8 +30,10 @@ class MovieCreate(FormView):
             released=cleaned_data["released"],
             description=cleaned_data["description"]
         )
+        messages.success(self.request, "Movie added succesfully")
         return result
 
     def form_invalid(self, form):
+        messages.warning(self.request, "Invalid form")
         LOGGER.warning("User provided invalid data")
         return super().form_invalid(form)

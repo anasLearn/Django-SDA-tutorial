@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
 <h1>Welcome to Holly Movies</h1>
@@ -9,5 +10,7 @@
     </li>
   {% endfor %}
 </ul>
+<img src="{% static 'img/cinema.jpg' %}" alt="picture of cinema">
+<img src="{% static 'img/action.jpg' %}" alt="picture of cinema">
 
 {% endblock %}

@@ -1,7 +1,5 @@
-from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views import View
-from django.views.generic import TemplateView, ListView, FormView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 from django.contrib import messages
 from .models import Movie
 from .forms import MovieForm
@@ -15,25 +13,41 @@ class MoviesView(ListView):
     model = Movie
 
 
-class MovieCreate(FormView):
+class MovieCreateView(CreateView):
     template_name = "form.html"
     form_class = MovieForm
     success_url = reverse_lazy("movie_create")
 
     def form_valid(self, form):
         result = super().form_valid(form)
-        cleaned_data = form.cleaned_data
-        Movie.objects.create(
-            title=cleaned_data["title"],
-            genre=cleaned_data["genre"],
-            rating=cleaned_data["rating"],
-            released=cleaned_data["released"],
-            description=cleaned_data["description"]
-        )
-        messages.success(self.request, "Movie added succesfully")
+        messages.success(self.request, "Movie added successfully")
         return result
+
 
     def form_invalid(self, form):
         messages.warning(self.request, "Invalid form")
         LOGGER.warning("User provided invalid data")
         return super().form_invalid(form)
+
+
+class MovieUpdateView(UpdateView):
+    template_name = "form.html"
+    model = Movie
+    form_class = MovieForm
+    success_url = reverse_lazy("index")
+
+    def form_invalid(self, form):
+        messages.warning(self.request, "Invalid form")
+        LOGGER.warning("User provided invalid data during update of the movie")
+        return super().form_invalid(form)
+
+
+class MovieDeleteView(DeleteView):
+    template_name = "viewer/movie_confirm_delete.html"
+    model = Movie
+    success_url = reverse_lazy("index")
+
+
+class MovieDetailView(DetailView):
+    template_name = "viewer/movie_details.html"
+    model = Movie

@@ -1,5 +1,6 @@
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from .models import Movie
 from .forms import MovieForm
@@ -8,12 +9,13 @@ from logging import getLogger
 LOGGER = getLogger()
 
 
+
 class MoviesView(ListView):
     template_name = "viewer/movies.html"
     model = Movie
 
 
-class MovieCreateView(CreateView):
+class MovieCreateView(LoginRequiredMixin, CreateView):
     template_name = "form.html"
     form_class = MovieForm
     success_url = reverse_lazy("movie_create")
@@ -30,7 +32,7 @@ class MovieCreateView(CreateView):
         return super().form_invalid(form)
 
 
-class MovieUpdateView(UpdateView):
+class MovieUpdateView(LoginRequiredMixin, UpdateView):
     template_name = "form.html"
     model = Movie
     form_class = MovieForm
@@ -42,7 +44,7 @@ class MovieUpdateView(UpdateView):
         return super().form_invalid(form)
 
 
-class MovieDeleteView(DeleteView):
+class MovieDeleteView(LoginRequiredMixin, DeleteView):
     template_name = "viewer/movie_confirm_delete.html"
     model = Movie
     success_url = reverse_lazy("index")

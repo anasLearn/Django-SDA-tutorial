@@ -7,8 +7,10 @@
   <strong>Rating:</strong> {{ movie.rating }}
 </p>
 <p>
-  {{ movie.description }}
+  {{ movie.description|linebreaksbr }}
 </p>
+
+
 
 
 {% endblock %}
